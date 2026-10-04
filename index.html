@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>网页解密</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    font-family: "Microsoft YaHei", sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    padding: 20px;
+  }
+
+  h2 {
+    color: white;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .search-box {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .search-box input {
+    flex: 1;
+    padding: 14px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 30px;
+    outline: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .search-box button {
+    padding: 14px 28px;
+    font-size: 16px;
+    border: none;
+    border-radius: 30px;
+    background: #ff7e5f;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s, background 0.2s;
+  }
+
+  .search-box button:hover {
+    background: #ff6347;
+    transform: scale(1.05);
+  }
+
+  .result {
+    width: 100%;
+    max-width: 500px;
+    min-height: 120px;
+    padding: 25px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    font-size: 16px;
+    line-height: 1.7;
+    color: #333;
+  }
+
+  .result .placeholder {
+    color: #999;
+    text-align: center;
+  }
+
+  .result .found {
+    color: #2a5298;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .result .not-found {
+    color: #d9534f;
+    text-align: center;
+  }
+
+  .result .link {
+    display: inline-block;
+    padding: 10px 24px;
+    background: #667eea;
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .result .link:hover {
+    background: #764ba2;
+    transform: scale(1.05);
+  }
+
+  .hint {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .hint span {
+    display: inline-block;
+    margin: 0 6px;
+    padding: 3px 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .hint span:hover {
+    background: rgba(255, 255, 255, 0.4);
+  }
+</style>
+</head>
+<body>
+
+  <h2>🔍 网页解密</h2>
+
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="输入关键词，按回车或点搜索">
+    <button id="searchBtn">搜索</button>
+  </div>
+
+  <div class="result" id="result">
+    <p class="placeholder">请输入关键词开始搜索～</p>
+  </div>
+
+ 
+
+<script>
+  const database = {
+    "国际飞行棋": {
+      text: "点击",
+      url: "flying chess.html"
+    },
+    "你汤哥": {
+      text: "你发现秘密了",
+      url: "mr tang.html"
+    },
+    "苹果": "🍎 苹果是apple。",
+    "网页解密": "要末·亚美楼，我很悲伤😭，我快呼吸不了😭，我很悲伤😭，国·庆要没了😭，30000000多张试卷让我哭泣😭😭😭😭😭😭😭😭😭😭😭😭😭😭😭😭😭😭😭😭亚美楼亚美楼亚美楼写代码半小时改bug半个月，要没漏亚美楼😭😭😭😭 😭 😭 😭 😭 😭 😭"
+  };
+
+  const input = document.getElementById("searchInput");
+  const btn = document.getElementById("searchBtn");
+  const resultBox = document.getElementById("result");
+
+  function search() {
+    const keyword = input.value.trim();
+
+    if (keyword === "") {
+      resultBox.innerHTML = '<p class="not-found">请输入关键词再搜索哦～</p>';
+      return;
+    }
+
+    const item = database[keyword];
+
+    if (item === undefined) {
+      resultBox.innerHTML = `
+        <p class="not-found">❌ 没有找到「${keyword}」相关的内容</p>
+      `;
+      return;
+    }
+
+    if (typeof item === "string") {
+      resultBox.innerHTML = `
+        <span class="found">✅ 找到「${keyword}」：</span>
+        ${item}
+      `;
+    } else {
+      resultBox.innerHTML = `
+        <span class="found">✅ 找到「${keyword}」：</span>
+        <a href="${item.url}" target="_blank" class="link">${item.text}</a>
+      `;
+    }
+  }
+
+  btn.addEventListener("click", search);
+
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      search();
+    }
+  });
+
+  function quickSearch(word) {
+    input.value = word;
+    search();
+  }
+</script>
+
+</body>
+</html>
